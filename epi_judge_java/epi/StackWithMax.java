@@ -4,28 +4,73 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+
 public class StackWithMax {
 
   public static class Stack {
+    DoublyListNode<Integer> head = new DoublyListNode<>(0, null, null);
+    DoublyListNode<Integer> tail = head;
+
+    List<Integer> maxNumbersList = new ArrayList<Integer>();
+
     public boolean empty() {
-      // TODO - you fill in here.
-      return true;
+      return tail == head;
     }
     public Integer max() {
-      // TODO - you fill in here.
-      return 0;
+      return maxNumbersList.get(maxNumbersList.size()-1);
     }
     public Integer pop() {
-      // TODO - you fill in here.
-      return 0;
+      int popVal = tail.data;
+      tail = tail.prev;
+      maxNumbersList.remove(maxNumbersList.size()-1);
+      return popVal;
     }
     public void push(Integer x) {
-      // TODO - you fill in here.
-      return;
+      DoublyListNode<Integer> temp = tail;
+      tail.next = new DoublyListNode<>(x, null, tail);
+      tail = tail.next;
+      tail.prev = temp;
+
+      if(maxNumbersList.isEmpty())
+        maxNumbersList.add(x);
+      else
+        maxNumbersList.add(Math.max(x, maxNumbersList.get(maxNumbersList.size()-1)));
     }
   }
+
+  /*private static class ElementWithCachedMax{
+    public Integer element;
+    public Integer max;
+
+    public ElementWithCachedMax(Integer element, Integer max){
+      this.element = element;
+      this.max = max;
+    }
+  }
+
+  public static class Stack{
+
+    private Deque<ElementWithCachedMax> elementWithCachedMax = new ArrayDeque<>();
+
+    public boolean empty(){
+      return elementWithCachedMax.isEmpty();
+    }
+
+    public Integer max(){
+      return elementWithCachedMax.peek().max;
+    }
+
+    public Integer pop(){
+      return elementWithCachedMax.removeFirst().element;
+    }
+
+    public void push(Integer x){
+      elementWithCachedMax.addFirst(new ElementWithCachedMax(x, Math.max(x, empty() ? x : max())));
+    }
+  }*/
+
+
   @EpiUserType(ctorParams = {String.class, int.class})
   public static class StackOp {
     public String op;

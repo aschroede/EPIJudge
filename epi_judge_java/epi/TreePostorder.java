@@ -2,6 +2,7 @@ package epi;
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 
+import java.util.ArrayList;
 import java.util.List;
 public class TreePostorder {
 
@@ -18,8 +19,17 @@ public class TreePostorder {
 
   @EpiTest(testDataFile = "tree_postorder.tsv")
   public static List<Integer> postorderTraversal(BinaryTreeNode<Integer> tree) {
-    // TODO - you fill in here.
-    return null;
+    List<Integer> postorderTraversalResult = new ArrayList<>();
+
+    if(tree == null)
+      return postorderTraversalResult;
+
+    postorderTraversalResult.addAll(postorderTraversal(tree.left));
+    postorderTraversalResult.addAll(postorderTraversal(tree.right));
+    postorderTraversalResult.add(tree.data);
+
+
+    return postorderTraversalResult;
   }
 
   public static void main(String[] args) {

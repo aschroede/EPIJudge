@@ -2,6 +2,7 @@ package epi;
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 
+import java.util.ArrayList;
 import java.util.List;
 public class TreePreorder {
 
@@ -17,8 +18,18 @@ public class TreePreorder {
 
   @EpiTest(testDataFile = "tree_preorder.tsv")
   public static List<Integer> preorderTraversal(BinaryTreeNode<Integer> tree) {
-    // TODO - you fill in here.
-    return null;
+
+    List<Integer> preorderTraversalResult = new ArrayList<>();
+
+    if(tree == null)
+      return preorderTraversalResult;
+
+    preorderTraversalResult.add(tree.data);
+    preorderTraversalResult.addAll(preorderTraversal(tree.left));
+    preorderTraversalResult.addAll(preorderTraversal(tree.right));
+
+
+    return preorderTraversalResult;
   }
 
   public static void main(String[] args) {
