@@ -4,45 +4,74 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 public class SearchMaze {
   @EpiUserType(ctorParams = {int.class, int.class})
 
-  public static class Coordinate {
-    public int x, y;
+  public static class Coordinate{
+    int x;
+    int y;
 
-    public Coordinate(int x, int y) {
+    public Coordinate(int x, int y){
       this.x = x;
       this.y = y;
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) {
+    public boolean equals(Object o){
+      if(this == o)
         return true;
-      }
 
-      if (o == null || getClass() != o.getClass()) {
+      if(o == null || getClass() != o.getClass())
         return false;
-      }
 
       Coordinate that = (Coordinate)o;
-      if (x != that.x || y != that.y) {
+      if(this.x != that.x || this.y != that.y)
         return false;
-      }
+
       return true;
     }
   }
 
-  public enum Color { WHITE, BLACK }
+  public enum Color {BLACK, WHITE};
 
   public static List<Coordinate> searchMaze(List<List<Color>> maze,
                                             Coordinate s, Coordinate e) {
-    // TODO - you fill in here.
-    return Collections.emptyList();
+    List<Coordinate> path = new ArrayList<>();
+    searchMazeHelper(maze, s, e, path);
+    return path;
   }
+
+  private static boolean searchMazeHelper(List<List<Color>> maze, Coordinate s, Coordinate e, List<Coordinate> path) {
+
+    if(s.x < 0 || s.x >= maze.size() || s.y < 0 || s.y >= maze.get(s.x).size()
+    || maze.get(s.x).get(s.y) != Color.WHITE){
+      return false;
+    }
+
+    path.add(s);
+    maze.get(s.x).set(s.y, Color.BLACK);
+    if(s.equals(e)){
+      return true;
+    }
+
+    // Search in each direction
+    for(Coordinate nextMove : List.of(new Coordinate(s.x, s.y+1),
+            new Coordinate(s.x, s.y-1),
+            new Coordinate(s.x+1, s.y),
+            new Coordinate(s.x-1, s.y))){
+
+      if(searchMazeHelper(maze, nextMove, e, path)){
+        return true;
+      }
+    }
+
+    // Path not found, remove item most recently added to path
+    path.remove(path.size()-1);
+    return  false;
+  }
+
   public static boolean pathElementIsFeasible(List<List<Integer>> maze,
                                               Coordinate prev, Coordinate cur) {
     if (!(0 <= cur.x && cur.x < maze.size() && 0 <= cur.y &&
